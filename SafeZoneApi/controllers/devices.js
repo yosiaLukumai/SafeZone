@@ -5,13 +5,13 @@ const register = async (req, res) => {
     try {
         const { serialNumber, phone, data, cordinates, owner, name, listTobeNotified } = req.body;
         const existingDevice = await devicesModel.findOne({
-            $or: [{ name }, { idNumber }]
+            $or: [{ name }, { serialNumber }]
         });
 
         if (existingDevice) {
-            return res.json(createOutput(false, "idNumber or name taken"));
+            return res.json(createOutput(false, "serialNumber or name taken"));
         }
-        
+
         const saved = await devicesModel.create({
             cordinates,
             listTobeNotified,
