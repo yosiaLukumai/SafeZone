@@ -88,9 +88,6 @@ export default function TabLayout() {
                         }}
                     />
                     <Tabs.Screen
-                        // listeners={{
-                        //     tabPress: (e) => handleTabPress(e, 'Charge'),
-                        // }}
                         name="charge"
                         options={{
                             headerShown: false,

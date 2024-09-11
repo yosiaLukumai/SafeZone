@@ -37,7 +37,6 @@ const register = async (req, res) => {
     const saved = await userModel.create({
       email,
       password,
-      balance: 0,
       fullName: fullName,
       phone,
       userType

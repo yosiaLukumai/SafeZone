@@ -2,12 +2,14 @@ import { useContext, createContext, type PropsWithChildren } from 'react';
 import { useStorageState } from './useStorage';
 
 const AuthContext = createContext<{
-  signIn: () => void;
+  signIn: (userDetails: string) => void;
   signOut: () => void;
   session?: string | null;
   isLoading: boolean;
 }>({
-  signIn: () => null,
+  signIn: (userDetails: string) => {
+    console.log(userDetails);
+  },
   signOut: () => null,
   session: null,
   isLoading: false,
@@ -22,7 +24,6 @@ export function useSession() {
       throw new Error('useSession must be wrapped in a <SessionProvider />');
     }
   }
-
   return value;
 }
 
@@ -32,9 +33,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
   return (
     <AuthContext.Provider
       value={{
-        signIn: () => {
-          // Perform sign-in logic here
-          setSession('xxx');
+        signIn: (userDetails: string) => {
+          setSession(userDetails);
         },
         signOut: () => {
           setSession(null);

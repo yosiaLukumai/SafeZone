@@ -48,13 +48,6 @@ const charging = () => {
 
                 </TouchableOpacity>
             </LinearGradient>
-            {/* <View style={[styles.submitButton, { marginTop: 40 }]}> */}
-            {/* <TouchableOpacity onPress={() => stopCharging()}>
-                <Text style={styles.submitText}>
-                    Stop Charging
-                </Text>
-            </TouchableOpacity> */}
-            {/* </View> */}
         </View>
     )
 }

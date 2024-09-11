@@ -1,14 +1,26 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import StatusDonut from '@/components/StatusDonut';
 import ItSafe from '@/components/ItSafe';
 import AlertKPI from '@/components/AlertKPI';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useEffect, useState } from 'react';
+import { useStorageState } from '@/context/useStorage';
 
 
 
 export default function Tab() {
+
+  const [[isLoading, session], setSession] = useStorageState('session');
+  const [user, setUser] = useState<null | any>(null)
+
+
+  useEffect(() => {
+    if (session != null) {
+      let myUser = JSON.parse(session)
+      setUser(myUser?.user)
+    }
+  }, [])
 
   return (
     <SafeAreaProvider>
@@ -20,9 +32,9 @@ export default function Tab() {
                 Hello
               </Text>
               <Text style={styles.fontName}>
-                Yosia
+                {String(user?.fullName).split(" ")[0]}
                 <Text style={styles.moreFocused}>
-                  - Lukumai
+                  {" " + String(user?.fullName).split(" ")[1]}
                 </Text>
               </Text>
             </View>

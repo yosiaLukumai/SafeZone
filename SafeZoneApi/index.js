@@ -4,6 +4,7 @@ const dbConfig = require("./db/connect");
 const multer = require("multer")
 const path = require("path")
 const userRoutes = require("./routes/users");
+const devicesRoutes = require("./routes/devices")
 const cors = require("cors");
 const { Server } = require('socket.io')
 const http = require("http");
@@ -34,6 +35,7 @@ app.get("/test", (req, res) => {
 
 // bringing all the routes
 userRoutes.userRoutes(app);
+devicesRoutes.DevicesRoutes(app)
 
 
 const server = http.createServer(app)

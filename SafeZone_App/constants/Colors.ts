@@ -24,3 +24,8 @@ export const Colors = {
     tabIconSelected: tintColorDark,
   },
 };
+
+
+export const ConfigurationsSetting = {
+  backendURL: "http://45.79.53.206:3710"
+}
