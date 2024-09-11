@@ -12,8 +12,12 @@ const LocationSchema = new mongoose.Schema({
 
 
 const Devices = mongoose.Schema({
-    idNumber: {
+    serialNumber: {
         type: String,
+    },
+    name: {
+        required: true,
+        type: String
     },
     cordinates: {
         type: LocationSchema,

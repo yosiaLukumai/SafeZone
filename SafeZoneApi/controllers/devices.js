@@ -3,11 +3,20 @@ const createOutput = require("../utils").createOutput;
 
 const register = async (req, res) => {
     try {
-        const { idNumber, phone, data, cordinates, owner, listTobeNotified } = req.body;
+        const { serialNumber, phone, data, cordinates, owner, name, listTobeNotified } = req.body;
+        const existingDevice = await devicesModel.findOne({
+            $or: [{ name }, { idNumber }]
+        });
+
+        if (existingDevice) {
+            return res.json(createOutput(false, "idNumber or name taken"));
+        }
+        
         const saved = await devicesModel.create({
             cordinates,
             listTobeNotified,
-            idNumber,
+            name,
+            serialNumber,
             owner,
             setting: {
                 PhoneNumber: phone,
