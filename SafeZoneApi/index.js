@@ -1,8 +1,6 @@
 const app = require("express")();
 const express = require("express");
 const dbConfig = require("./db/connect");
-const multer = require("multer")
-const path = require("path")
 const userRoutes = require("./routes/users");
 const devicesRoutes = require("./routes/devices")
 const cors = require("cors");
@@ -72,6 +70,4 @@ server.listen(process.env.PORT, () => {
   console.log(`App running and connected to port ${process.env.PORT}`);
 });
 module.exports.Socket = io
-
-
 
