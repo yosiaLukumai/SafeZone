@@ -3,24 +3,16 @@ const express = require("express");
 const dbConfig = require("./db/connect");
 const userRoutes = require("./routes/users");
 const devicesRoutes = require("./routes/devices")
+const UserModal = require("./models/users")
 const cors = require("cors");
 const { Server } = require('socket.io')
 const http = require("http");
+const logModal = require("./models/Logs")
 require("dotenv").config();
 dbConfig.connectDb();
+const mqtt = require('mqtt');
+const brokerUrl = 'mqtt://45.79.53.206:1883';
 
-
-const aedes = require('aedes')();
-const net = require('net');
-
-
-const mqttPort = 1883;
-const mqttServer = net.createServer(aedes.handle);
-
-
-mqttServer.listen(mqttPort, () => {
-  console.log(`MQTT broker started and listening on port ${mqttPort}`);
-});
 
 
 // limiting all the acces that comes from other hosting
@@ -54,20 +46,88 @@ io.on("connect", (socket) => {
 })
 
 
-// Handle MQTT connections and events
-aedes.on('client', (client) => {
-  console.log(`MQTT Client connected: ${client.id}`);
+const client = mqtt.connect(brokerUrl);
+
+client.on('connect', function () {
+  console.log('Connected to broker');
+  client.subscribe('notification/critical', function (err) {
+    if (err) {
+      console.error('Subscription error:', err);
+    } else {
+      console.log('Subscribed to topic: notification/critical');
+    }
+  });
+  client.subscribe('notification', function (err) {
+    if (err) {
+      console.error('Subscription error:', err);
+    } else {
+      console.log('Subscribed to topic: notification');
+    }
+  });
 });
 
-aedes.on('publish', (packet, client) => {
-  console.log(`Message published: ${packet.payload.toString()}`);
+// Handle incoming messages
+client.on('message', async function (topic, message) {
+  // message is a buffer, so convert it to string
+  // checnk for the top
+  let MyData = JSON.parse(message)
+  if (topic == "notification/critical") {
+    // something is not ok here ....
+    console.log("  disaster alert notify the users................");
+    try {
+      const saved = await await logModal.create({
+        temp: MyData?.temp,
+        serialNumber: MyData.serialNumber,
+        hum: MyData?.hum,
+        flameValue: MyData?.flameValue,
+        critical: true,
+        smokeCoValue: MyData?.smokeCoValue,
+        notification: MyData?.notif
+      })
+      // find the user
+      let user = await UserModal.findOne({})
+    } catch (error) {
+      console.log(error);
+    }
+    // send message...
+
+  }
+  if (topic == "notification") {
+    // there is new notification.....
+    console.log(" just some log");
+    // issue ya security later has to be taken into consideratopn
+    try {
+      const saved = await logModal.create({
+        temp: MyData?.temp,
+        serialNumber: MyData.serialNumber,
+        hum: MyData?.hum,
+        flameValue: MyData?.flameValue,
+        critical: false,
+        smokeCoValue: MyData?.smokeCoValue,
+        notification: MyData?.notif
+      })
+      if (saved) {
+        console.log(" just saved well...");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+
+  }
 });
 
-aedes.on('subscribe', (subscriptions, client) => {
-  console.log(`Client subscribed to topics: ${subscriptions.map(s => s.topic).join(', ')}`);
+// Handle errors
+client.on('error', function (err) {
+  console.error('Connection error:', err);
 });
+
+
+
+
 server.listen(process.env.PORT, () => {
   console.log(`App running and connected to port ${process.env.PORT}`);
 });
 module.exports.Socket = io
+
 

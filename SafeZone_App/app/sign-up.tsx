@@ -49,7 +49,6 @@ export default function SignUp() {
 
                 const result = await response.json()
                 if (result?.success) {
-
                     ToastAndroid.show("User registered..", ToastAndroid.SHORT);
                 } else {
                     if (String(result?.body).includes("duplicate")) {

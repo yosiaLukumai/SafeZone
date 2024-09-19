@@ -47,7 +47,7 @@ export default function TabLayout() {
     };
     return (
         <View style={{ flex: 1, backgroundColor: "#111827", }}>
-            <StatusBar style='light' animated={true} />
+            <StatusBar style='dark' animated={true} />
             <SafeAreaView style={{ flex: 1 }}>
                 <Tabs screenOptions={{
                     tabBarActiveTintColor: '#fff',

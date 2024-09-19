@@ -1,9 +1,11 @@
 const devicesModel = require("../models/Devices");
+const devicesCreated = require("../models/devicesCreated")
 const createOutput = require("../utils").createOutput;
 
 const register = async (req, res) => {
     try {
         const { serialNumber, phone, data, cordinates, owner, name, listTobeNotified } = req.body;
+        // 
         const existingDevice = await devicesModel.findOne({
             $or: [{ name }, { serialNumber }]
         });
@@ -11,25 +13,38 @@ const register = async (req, res) => {
         if (existingDevice) {
             return res.json(createOutput(false, "serialNumber or name taken"));
         }
-
-        const saved = await devicesModel.create({
-            cordinates,
-            listTobeNotified,
-            name,
-            serialNumber,
-            owner,
-            setting: {
-                PhoneNumber: phone,
-                updateRate: 3,
-                Change: false,
-                AmountRecharged: data
+        const createdInList = await devicesCreated.findOne({ $and: [{ serialNumber: serialNumber }, { USED: "false" }] });
+        if (createdInList) {
+            const saved = await devicesModel.create({
+                cordinates,
+                listTobeNotified,
+                name, 
+                serialNumber,
+                owner,
+                setting: {
+                    PhoneNumber: phone,
+                    updateRate: 3,
+                    Change: false, 
+                    AmountRecharged: data
+                }
+            });
+            if (saved) {
+                // updated...
+                const update = await devicesCreated.updateOne({ serialNumber }, { USED: "true" })
+                if (update) {
+                    return res.json(createOutput(true, saved));
+                } else {
+                    return res.json(createOutput(true, saved));
+                }
+            } else {
+                return res.json(createOutput(false, saved));
             }
-        });
-        if (saved) {
-            return res.json(createOutput(true, saved));
         } else {
-            return res.json(createOutput(false, saved));
+            return res.json(createOutput(false, "No such device created"));
+
         }
+
+
     } catch (error) {
         return res.json(createOutput(false, error.message, true));
     }

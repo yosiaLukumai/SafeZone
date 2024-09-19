@@ -6,57 +6,60 @@ import AlertKPI from '@/components/AlertKPI';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import { useStorageState } from '@/context/useStorage';
+import UnderGroundProcess from '@/components/UnderGroundProcess';
 
 
 
 export default function Tab() {
-
   const [[isLoading, session], setSession] = useStorageState('session');
   const [user, setUser] = useState<null | any>(null)
-
 
   useEffect(() => {
     if (session != null) {
       let myUser = JSON.parse(session)
       setUser(myUser?.user)
     }
-  }, [])
+    
+  }, [session])
 
   return (
     <SafeAreaProvider>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View style={styles.container}>
-          <View style={styles.BoxTop}>
-            <View style={styles.userNameWelcome}>
-              <Text style={[styles.fontMain]}>
-                Hello
-              </Text>
-              <Text style={styles.fontName}>
-                {String(user?.fullName).split(" ")[0]}
-                <Text style={styles.moreFocused}>
-                  {" " + String(user?.fullName).split(" ")[1]}
+        {
+          user == null ? (<UnderGroundProcess loaderColor='yellow'  textMSG='Processing'/>) : (<View style={styles.container}>
+            <View style={styles.BoxTop}>
+              <View style={styles.userNameWelcome}>
+                <Text style={[styles.fontMain]}>
+                  Hello
                 </Text>
-              </Text>
+                <Text style={styles.fontName}>
+                  {String(user?.fullName).split(" ")[0]}
+                  <Text style={styles.moreFocused}>
+                    {" " + String(user?.fullName).split(" ")[1]}
+                  </Text>
+                </Text>
+              </View>
+              <View style={styles.glass}>
+                <TouchableOpacity >
+                  <View style={styles.IconNotification}>
+                    <MaterialIcons name="notifications-none" size={30} color="#fff" />
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.glass}>
-              <TouchableOpacity >
-                <View style={styles.IconNotification}>
-                  <MaterialIcons name="notifications-none" size={30} color="#fff" />
-                </View>
-              </TouchableOpacity>
+
+
+            <View style={{ paddingHorizontal: 2, justifyContent: "center", alignItems: "center" }}>
+              <ItSafe />
             </View>
-          </View>
 
+            <View style={{ paddingVertical: 20 }}>
+              <AlertKPI />
+            </View>
 
-          <View style={{ paddingHorizontal: 2, justifyContent: "center", alignItems: "center" }}>
-            <ItSafe />
-          </View>
+          </View>)
+        }
 
-          <View style={{ paddingVertical: 20 }}>
-            <AlertKPI />
-          </View>
-
-        </View>
       </ScrollView>
     </SafeAreaProvider>
 
