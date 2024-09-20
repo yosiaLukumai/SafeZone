@@ -6,9 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { MaterialIcons } from '@expo/vector-icons';
 
 const charging = () => {
-
     const stopCharging = (): void => {
-
     }
     return (
         <View style={styles.container}>

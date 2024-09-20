@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import { useStorageState } from '@/context/useStorage';
 import UnderGroundProcess from '@/components/UnderGroundProcess';
+import { router } from 'expo-router';
 
 
 
@@ -19,14 +20,14 @@ export default function Tab() {
       let myUser = JSON.parse(session)
       setUser(myUser?.user)
     }
-    
+
   }, [session])
 
   return (
     <SafeAreaProvider>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         {
-          user == null ? (<UnderGroundProcess loaderColor='yellow'  textMSG='Processing'/>) : (<View style={styles.container}>
+          user == null ? (<UnderGroundProcess loaderColor='yellow' textMSG='Processing' />) : (<View style={styles.container}>
             <View style={styles.BoxTop}>
               <View style={styles.userNameWelcome}>
                 <Text style={[styles.fontMain]}>
@@ -40,8 +41,8 @@ export default function Tab() {
                 </Text>
               </View>
               <View style={styles.glass}>
-                <TouchableOpacity >
-                  <View style={styles.IconNotification}>
+                <TouchableOpacity onPress={() => router.push("/fireDetected?disasterType=Fire")}>
+                  <View style={styles.IconNotification} >
                     <MaterialIcons name="notifications-none" size={30} color="#fff" />
                   </View>
                 </TouchableOpacity>

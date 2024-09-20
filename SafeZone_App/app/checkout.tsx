@@ -6,7 +6,7 @@ import { router } from 'expo-router'
 
 const checkout = () => {
   const payNow = (): void => {
-    router.push("charging")
+    router.push("/charging")
   }
   return (
     <View style={styles.container}>

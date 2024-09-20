@@ -47,7 +47,7 @@ export default function TabLayout() {
     };
     return (
         <View style={{ flex: 1, backgroundColor: "#111827", }}>
-            <StatusBar style='dark' animated={true} />
+            <StatusBar style='light' animated={true} />
             <SafeAreaView style={{ flex: 1 }}>
                 <Tabs screenOptions={{
                     tabBarActiveTintColor: '#fff',
@@ -108,7 +108,7 @@ export default function TabLayout() {
                         options={{
                             headerShown: false,
                             title: "Devices",
-                            tabBarIcon: ({ color }) => <MaterialCommunityIcons name="safe-square" size={30} color={color}  />,
+                            tabBarIcon: ({ color }) => <MaterialCommunityIcons name="safe-square" size={30} color={color} />,
                         }}
                     />
                     <Tabs.Screen

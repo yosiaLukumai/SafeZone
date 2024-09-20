@@ -20,7 +20,7 @@ export default function Root() {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location.coords);
-      
+
     })();
   }, []);
 
@@ -69,6 +69,7 @@ export default function Root() {
                   backgroundColor: "#0e1a25"
                 }
               }} />
+              
             </Stack>
           </GestureHandlerRootView>
         </View>
