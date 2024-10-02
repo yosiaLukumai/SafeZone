@@ -6,7 +6,7 @@ import Chip from './Chip';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-export default function AlertKPI() {
+export default function AlertKPI({ device }: { device: any }) {
     return (
         <View style={{ paddingHorizontal: 2 }}>
             <View style={[styles.glass, { paddingVertical: 8, display: "flex", flexDirection: "row", justifyContent: "flex-start" }]}>
@@ -14,7 +14,7 @@ export default function AlertKPI() {
                     <MaterialCommunityIcons name="smoke-detector" size={50} color="#fff" />
                 </View>
                 <View style={{ display: "flex", flexDirection: "column", paddingLeft: 9, gap: 6, flex: 1, }}>
-                    <View><Text style={{ fontSize: 17, fontWeight: "500", color: "#7678ed" }}> Duka langu Moshono</Text></View>
+                    <View><Text style={{ fontSize: 17, fontWeight: "500", color: "#7678ed" }}>{device?.name}</Text></View>
                     <View style={{ display: "flex", justifyContent: "space-between", flexDirection: "row", paddingHorizontal: 5 }}>
                         <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                             <Entypo name="signal" size={18} color="#04c401" />

@@ -231,7 +231,7 @@ export default function Tab() {
                         <TextInput
                           onFocus={() => setIsFocused("input1")}
                           onBlur={() => setIsFocused(null)}
-                          keyboardType='numeric'
+                          keyboardType='default'
                           style={[styles.input, styles.gapped, { borderColor: getBorderColor("input1") }]}
                           onChangeText={(val) => onChanges("input1", val)}
                           value={serialNumber}

@@ -28,4 +28,5 @@ export const Colors = {
 
 export const ConfigurationsSetting = {
   backendURL: "http://45.79.53.206:3710"
+  // backendURL: "http://192.168.16.104:3710"
 }

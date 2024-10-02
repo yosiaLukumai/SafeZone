@@ -3,16 +3,17 @@ const express = require("express");
 const dbConfig = require("./db/connect");
 const userRoutes = require("./routes/users");
 const devicesRoutes = require("./routes/devices")
-const UserModal = require("./models/users")
+const deviceModal = require("./models/Devices")
 const cors = require("cors");
 const { Server } = require('socket.io')
 const http = require("http");
 const logModal = require("./models/Logs")
 require("dotenv").config();
+
 dbConfig.connectDb();
 const mqtt = require('mqtt');
+const send_sms = require("./services/beem");
 const brokerUrl = 'mqtt://45.79.53.206:1883';
-
 
 
 // limiting all the acces that comes from other hosting
@@ -84,8 +85,19 @@ client.on('message', async function (topic, message) {
         smokeCoValue: MyData?.smokeCoValue,
         notification: MyData?.notif
       })
-      // find the user
-      let user = await UserModal.findOne({})
+      // find the devicemodel for this thing as first as possible
+
+      let device = await deviceModal.findOne({ serialNumber: MyData.serialNumber })
+
+      if (device) {
+        io.emit("notificationCritical", JSON.stringify({ ...device, notification: MyData?.notif }))
+        const recipients = device?.listTobeNotified || [];
+        const message = `There ${MyData?.notif} at this ${device?.name}. Please take response very first`;
+        send_sms(message, recipients);
+      } else {
+        console.log(" No such device and no notifying the user");
+
+      }
     } catch (error) {
       console.log(error);
     }

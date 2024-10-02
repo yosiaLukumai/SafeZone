@@ -76,7 +76,6 @@ const FindAllDevicesRelatedUser = async (req, res) => {
         } else {
             return res.json(createOutput(false, "No such devices"));
         }
-
     } catch (error) {
         return res.json(createOutput(false, error.message, true));
     }

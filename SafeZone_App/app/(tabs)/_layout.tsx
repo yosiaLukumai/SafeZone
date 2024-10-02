@@ -6,6 +6,8 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import * as Location from 'expo-location';
+import { UserLocationContext } from './../context/UserLocationContext';
 
 import { useSession, SessionProvider } from "./../../context/contex"
 
@@ -13,6 +15,37 @@ export default function TabLayout() {
     const BgColor = "#0e1a25"
     const VeryActive = "#04c401"
     const [modalVisible, setModalVisible] = useState(false);
+
+    const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null | any>(null);
+    useEffect(() => {
+        (async () => {
+            try {
+                let { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    setErrorMsg('Permission to access location was denied');
+                    return;
+                }
+                let location = await Location.getCurrentPositionAsync({});
+                setLocation(location.coords);
+            } catch (error) {
+                console.log(error, "error");
+
+            }
+
+
+        })();
+    }, []);
+
+    useEffect
+
+    if (errorMsg != null) {
+        return (
+            <View style={{ flex: 1, justifyContent: "center", alignContent: "center" }}>
+                <Text style={{ fontSize: 17, fontWeight: "400" }}> {errorMsg}</Text>
+            </View>
+        )
+    }
 
     const { session, isLoading } = useSession();
     useEffect(() => {
@@ -46,84 +79,87 @@ export default function TabLayout() {
         }
     };
     return (
-        <View style={{ flex: 1, backgroundColor: "#111827", }}>
-            <StatusBar style='light' animated={true} />
-            <SafeAreaView style={{ flex: 1 }}>
-                <Tabs screenOptions={{
-                    tabBarActiveTintColor: '#fff',
-                    tabBarHideOnKeyboard: true,
-                    tabBarItemStyle: {
-                        paddingVertical: 4
-                    },
-                    tabBarStyle: {
-                        backgroundColor: BgColor,
-                        height: 62,
-                        elevation: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        position: "absolute",
-                    },
-                    tabBarLabelStyle: {
-                        fontSize: 14,
-                        fontWeight: "500"
-                    },
+        <UserLocationContext.Provider value={{ location, setLocation }}>
+            <View style={{ flex: 1, backgroundColor: "#111827", }}>
+                <StatusBar style='light' animated={true} />
+                <SafeAreaView style={{ flex: 1 }}>
+                    <Tabs screenOptions={{
+                        tabBarActiveTintColor: '#fff',
+                        tabBarHideOnKeyboard: true,
+                        tabBarItemStyle: {
+                            paddingVertical: 4
+                        },
+                        tabBarStyle: {
+                            backgroundColor: BgColor,
+                            height: 62,
+                            elevation: 0,
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            position: "absolute",
+                        },
+                        tabBarLabelStyle: {
+                            fontSize: 14,
+                            fontWeight: "500"
+                        },
 
-                }}>
-                    <Tabs.Screen
-                        name="index"
-                        options={{
-                            title: 'Home',
+                    }}>
+                        <Tabs.Screen
+                            name="index"
+                            options={{
+                                title: 'Home',
 
-                            headerShown: false,
-                            tabBarIcon: ({ color }) => <Entypo name="home" size={30} color={color} />,
-                        }}
-                    />
-                    <Tabs.Screen
-                        name="statistics"
-                        options={{
-                            headerShown: false,
-                            title: "Statistics",
-                            tabBarIcon: ({ color }) => <Entypo name="line-graph" size={30} color={color} />,
-                        }}
-                    />
-                    <Tabs.Screen
-                        name="charge"
-                        options={{
-                            headerShown: false,
-                            tabBarLabel: () => null,
-                            tabBarIcon: ({ focused }) => {
-                                return (
-                                    <View style={styles.ChargeButton}>
-                                        <FontAwesome6 name="add" size={30} color="#fff" />
-                                        {/* <MaterialIcons name="electric-bolt" size={30} color="#fff" /> */}
-                                    </View>
-                                )
-                            }
-                        }}
+                                headerShown: false,
+                                tabBarIcon: ({ color }) => <Entypo name="home" size={30} color={color} />,
+                            }}
+                        />
+                        <Tabs.Screen
+                            name="statistics"
+                            options={{
+                                headerShown: false,
+                                title: "Statistics",
+                                tabBarIcon: ({ color }) => <Entypo name="line-graph" size={30} color={color} />,
+                            }}
+                        />
+                        <Tabs.Screen
+                            name="charge"
+                            options={{
+                                headerShown: false,
+                                tabBarLabel: () => null,
+                                tabBarIcon: ({ focused }) => {
+                                    return (
+                                        <View style={styles.ChargeButton}>
+                                            <FontAwesome6 name="add" size={30} color="#fff" />
+                                            {/* <MaterialIcons name="electric-bolt" size={30} color="#fff" /> */}
+                                        </View>
+                                    )
+                                }
+                            }}
 
-                    />
-                    <Tabs.Screen
-                        name="device"
-                        options={{
-                            headerShown: false,
-                            title: "Devices",
-                            tabBarIcon: ({ color }) => <MaterialCommunityIcons name="safe-square" size={30} color={color} />,
-                        }}
-                    />
-                    <Tabs.Screen
-                        name="profile"
-                        options={{
-                            title: 'Profile',
-                            headerShown: false,
-                            tabBarIcon: ({ color }) => <Entypo name="user" size={30} color={color} />,
-                        }}
-                    />
-                </Tabs>
+                        />
+                        <Tabs.Screen
+                            name="device"
+                            options={{
+                                headerShown: false,
+                                title: "Devices",
+                                tabBarIcon: ({ color }) => <MaterialCommunityIcons name="safe-square" size={30} color={color} />,
+                            }}
+                        />
+                        <Tabs.Screen
+                            name="profile"
+                            options={{
+                                title: 'Profile',
+                                headerShown: false,
+                                tabBarIcon: ({ color }) => <Entypo name="user" size={30} color={color} />,
+                            }}
+                        />
+                    </Tabs>
 
-            </SafeAreaView>
+                </SafeAreaView>
 
-        </View>
+            </View>
+        </UserLocationContext.Provider>
+
 
     );
 }

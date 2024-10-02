@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ToastAndroid } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import ItSafe from '@/components/ItSafe';
@@ -7,21 +7,53 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import { useStorageState } from '@/context/useStorage';
 import UnderGroundProcess from '@/components/UnderGroundProcess';
-import { router } from 'expo-router';
+import { ConfigurationsSetting } from '@/constants/Colors';
 
 
 
 export default function Tab() {
   const [[isLoading, session], setSession] = useStorageState('session');
   const [user, setUser] = useState<null | any>(null)
+  const [messages, setMessages] = useState([]);
+  const [devices, setDevices] = useState<null | any>(null);
+  const [errors, setErrors] = useState(false);
+
+  async function FetchDevices(ownerID: string) {
+    try {
+      const response = await fetch(
+        `${ConfigurationsSetting.backendURL}/devices/find/all/${ownerID}`,
+        {
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'GET',
+        }
+      );
+      let results = await response.json();
+      if (results?.success) {
+        setDevices(results?.body);
+      } else {
+        setDevices([]);
+      }
+    } catch (error) {
+      console.log(error);
+      setErrors(true);
+      ToastAndroid.show('Failed to load devices', ToastAndroid.SHORT);
+    }
+  }
+
 
   useEffect(() => {
     if (session != null) {
       let myUser = JSON.parse(session)
+      FetchDevices(myUser?.user?._id)
       setUser(myUser?.user)
     }
 
   }, [session])
+
+
 
   return (
     <SafeAreaProvider>
@@ -41,7 +73,7 @@ export default function Tab() {
                 </Text>
               </View>
               <View style={styles.glass}>
-                <TouchableOpacity onPress={() => router.push("/fireDetected?disasterType=Fire")}>
+                <TouchableOpacity>
                   <View style={styles.IconNotification} >
                     <MaterialIcons name="notifications-none" size={30} color="#fff" />
                   </View>
@@ -49,14 +81,48 @@ export default function Tab() {
               </View>
             </View>
 
-
             <View style={{ paddingHorizontal: 2, justifyContent: "center", alignItems: "center" }}>
               <ItSafe />
             </View>
 
-            <View style={{ paddingVertical: 20 }}>
-              <AlertKPI />
-            </View>
+
+            {devices && devices.length > 0 ? (
+              <View>
+                <View style={{ paddingVertical: 13 }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text style={{ color: '#04c301', fontSize: 29, fontWeight: '700' }}>
+                      All
+                    </Text>
+                    <Text
+                      style={{
+                        color: '#f9c647',
+                        fontSize: 29,
+                        fontWeight: '700',
+                        marginLeft: 5,
+                      }}
+                    >
+                      Devices
+                    </Text>
+                  </View>
+                </View>
+                {devices.map((device: any, index: number) => (
+                  <View key={index} style={{ paddingVertical: 12 }}>
+                    <AlertKPI device={device} />
+                  </View>
+                ))}
+                <View style={{ paddingBottom: 90 }}></View>
+              </View>
+            ) : (
+              <Text style={{ color: 'white', textAlign: 'center', marginVertical: 27, fontSize: 19 }}>
+                You haven't addes any devices
+              </Text>
+            )}
 
           </View>)
         }

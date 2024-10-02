@@ -5,10 +5,15 @@ import { SessionProvider } from "../context/contex"
 import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
 import { UserLocationContext } from './context/UserLocationContext';
+import { SocketProvider } from './context/SocketConnectionContex';
+
+
+
 
 export default function Root() {
   const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null | any>(null);
+
   useEffect(() => {
     (async () => {
 
@@ -33,48 +38,50 @@ export default function Root() {
   }
   return (
     <SessionProvider>
-      <UserLocationContext.Provider value={{ location, setLocation }}>
-        <View style={{ flex: 1 }}>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name='checkout' options={{
-                // statusBarColor:"red",
-                headerTitle: "Check & Confirm",
-                headerTitleAlign: "center",
-                headerTintColor: "white",
-                headerStyle: {
-                  // backgroundColor:"red",
-                  backgroundColor: "#0e1a25"
-                }
-              }} />
-              <Stack.Screen name='sign-in' options={{
-                // statusBarColor:"red",
-                headerShown: false,
-                headerTitle: "Login",
-                headerTitleAlign: "center",
-                headerTintColor: "white",
-                headerStyle: {
-                  // backgroundColor:"red",
-                  backgroundColor: "#0e1a25"
-                }
-              }} />
-              <Stack.Screen name='charging' options={{
-                // statusBarColor:"red",
-                headerTitle: "Charging",
-                headerTitleAlign: "center",
-                headerTintColor: "white",
-                headerStyle: {
-                  // backgroundColor:"red",
-                  backgroundColor: "#0e1a25"
-                }
-              }} />
-              
-            </Stack>
-          </GestureHandlerRootView>
-        </View>
-      </UserLocationContext.Provider>
-    </SessionProvider>
+      <SocketProvider>
 
+        <UserLocationContext.Provider value={{ location, setLocation }}>
+          <View style={{ flex: 1 }}>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name='checkout' options={{
+                  // statusBarColor:"red",
+                  headerTitle: "Check & Confirm",
+                  headerTitleAlign: "center",
+                  headerTintColor: "white",
+                  headerStyle: {
+                    // backgroundColor:"red",
+                    backgroundColor: "#0e1a25"
+                  }
+                }} />
+                <Stack.Screen name='sign-in' options={{
+                  // statusBarColor:"red",
+                  headerShown: false,
+                  headerTitle: "Login",
+                  headerTitleAlign: "center",
+                  headerTintColor: "white",
+                  headerStyle: {
+                    // backgroundColor:"red",
+                    backgroundColor: "#0e1a25"
+                  }
+                }} />
+                <Stack.Screen name='charging' options={{
+                  // statusBarColor:"red",
+                  headerTitle: "Charging",
+                  headerTitleAlign: "center",
+                  headerTintColor: "white",
+                  headerStyle: {
+                    // backgroundColor:"red",
+                    backgroundColor: "#0e1a25"
+                  }
+                }} />
+
+              </Stack>
+            </GestureHandlerRootView>
+          </View>
+        </UserLocationContext.Provider>
+      </SocketProvider>
+    </SessionProvider>
   );
 }

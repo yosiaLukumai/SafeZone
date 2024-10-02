@@ -1,11 +1,19 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { useSocket } from '@/app/context/SocketConnectionContex';
 
-const ItSafe = ({ safe = false }) => {
+const ItSafe = ({ }) => {
+    const socketContext = useSocket(); // Get the whole context
+    const thereDisaster = socketContext?.thereDisaster || false; // Safely access thereDisaster or default to false
+
+    // Change safe based on thereDisaster
+    const safe = !thereDisaster;
+    const borderColorStyle = { borderColor: safe ? '#04c401' : '#ef233c' };
+    const textFormat = safe ? "Safe" : "Danger";
     return (
-        <View style={[styles.mainDiv, styles.neon]}>
+        <View style={[styles.mainDiv, styles.neon, borderColorStyle]}>
             <View style={styles.glass}>
-                <Text style={styles.percentageSize}> Safe
+                <Text style={styles.percentageSize}>   {textFormat}
                 </Text>
             </View>
         </View>
@@ -19,7 +27,7 @@ const styles = StyleSheet.create({
         width: 256,
         height: 256,
         borderWidth: 11,
-        borderColor: "#04c401",
+        // borderColor: "#04c401",
         borderRadius: 128,
         justifyContent: "center",
         alignItems: "center",

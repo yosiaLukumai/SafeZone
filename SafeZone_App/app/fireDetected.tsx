@@ -6,7 +6,6 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Foundation from '@expo/vector-icons/Foundation';
 
 const fireDetected = () => {
-
     const [sound, setSound] = useState<Audio.Sound | null>(null);
     const router = useRouter(); // Use the router for navigation
     const { disasterType } = useLocalSearchParams<{ disasterType: string }>();
