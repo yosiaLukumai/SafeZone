@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "SafeZone",
-    "slug": "safezone",
+    "name": "safetyfirst",
+    "slug": "safetyfirst",
     "version": "1.0.0",
     "orientation": "portrait",
     "owner": "yosialukumai",
     "icon": "./assets/images/icon.png",
-    "scheme": ["safezone"],
+    "scheme": ["safetyfirst"],
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",

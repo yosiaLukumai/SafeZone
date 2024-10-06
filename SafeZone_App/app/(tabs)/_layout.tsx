@@ -37,7 +37,7 @@ export default function TabLayout() {
         })();
     }, []);
 
-    useEffect
+    
 
     if (errorMsg != null) {
         return (

@@ -45,6 +45,8 @@ export default function SignIn() {
         setLoader(false)
 
       } catch (error) {
+        console.log(error);
+        
         setLoader(false)
         ToastAndroid.show('login failed!', ToastAndroid.SHORT);
       }
